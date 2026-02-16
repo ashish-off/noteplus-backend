@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
 import NoteModel from "../models/Note.model";
-import formattedDate from "../utils/formattedDate";
 
 // get all notes
 export const getAllNotes = async (req: any, res: any) => {
@@ -12,13 +10,11 @@ export const getAllNotes = async (req: any, res: any) => {
       data: notes,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to fetch notes",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch notes",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };
 
@@ -38,25 +34,21 @@ export const getNoteById = async (req: any, res: any) => {
       data: note,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to fetch note",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch note",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };
 
 // create a new note
 export const createNote = async (req: any, res: any) => {
   try {
-    const { title, details, date } = req.body;
+    const { title, details } = req.body;
     const newNote = await NoteModel.create({
       title,
       details,
-      date,
-      dateLabel: formattedDate(date),
     });
     res.status(201).json({
       success: true,
@@ -64,13 +56,11 @@ export const createNote = async (req: any, res: any) => {
       data: newNote,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to create note",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create note",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };
 
@@ -90,13 +80,11 @@ export const deleteNote = async (req: any, res: any) => {
       data: deletedNote,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to delete note",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete note",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };
 
@@ -104,10 +92,10 @@ export const deleteNote = async (req: any, res: any) => {
 export const updateNote = async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { title, details, date } = req.body;
+    const { title, details } = req.body;
     const updatedNote = await NoteModel.findByIdAndUpdate(
       id,
-      { title, details, date, dateLabel: formattedDate(date) },
+      { title, details },
       { new: true },
     );
     if (!updatedNote) {
@@ -121,12 +109,10 @@ export const updateNote = async (req: any, res: any) => {
       data: updatedNote,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to update note",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update note",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };

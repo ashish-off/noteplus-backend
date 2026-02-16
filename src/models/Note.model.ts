@@ -13,15 +13,9 @@ const notesSchema = new mongoose.Schema(
       required: [true, 'Details are required'],
       trim: true
     },
-    date: {
-      type: Date,
-      default: () => new Date()
-    },
     dateLabel: {
       type: String,
-      default: function (this: { date?: Date }) {
-        return formattedDate(this.date)
-      }
+      default: formattedDate
     }
   },
   {

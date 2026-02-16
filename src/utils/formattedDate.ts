@@ -1,5 +1,5 @@
-const formattedDate = (value?: Date): string => {
-  const date = value ?? new Date()
+const formattedDate = (): string => {
+  const date = new Date()
   return date
     .toLocaleString('en-US', {
       month: 'short',
