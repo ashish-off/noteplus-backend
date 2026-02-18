@@ -20,7 +20,8 @@ app.get('/', (req, res) => {
             create_note: '/api/notes',
             get_note_by_id: '/api/notes/:id',
             update_note: '/api/notes/:id',
-            delete_note: '/api/notes/:id'
+            delete_note: '/api/notes/:id',
+            delete_all_notes: '/api/notes/delete-all'
         }
     });
 });
