@@ -1,4 +1,6 @@
 import NoteModel from "../models/Note.model";
+import { Dev_User_id } from "../models/user.model";
+import formattedDate from "../utils/formattedDate";
 
 // get all notes
 export const getAllNotes = async (req: any, res: any) => {
@@ -49,6 +51,7 @@ export const createNote = async (req: any, res: any) => {
     const newNote = await NoteModel.create({
       title,
       details,
+      userId : Dev_User_id,
     });
     res.status(201).json({
       success: true,
@@ -95,7 +98,7 @@ export const updateNote = async (req: any, res: any) => {
     const { title, details } = req.body;
     const updatedNote = await NoteModel.findByIdAndUpdate(
       id,
-      { title, details },
+      { title, details, dateLabel: formattedDate() },
       { new: true },
     );
     if (!updatedNote) {

@@ -16,6 +16,11 @@ const notesSchema = new mongoose.Schema(
     dateLabel: {
       type: String,
       default: formattedDate
+    },
+    userId : {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'User',
+      required:true
     }
   },
   {
