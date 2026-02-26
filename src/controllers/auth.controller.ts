@@ -15,7 +15,8 @@ export const registerUser = async (req: Request, res: Response) => {
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hash });
     const token = generateToken(user._id.toString());
-    res.status(201).json({ user, token });
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    res.status(201).json({ user: userWithoutPassword, token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
