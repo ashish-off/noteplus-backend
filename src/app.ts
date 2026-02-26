@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import router from './routes/notes.routes'
+import authRouter from "./routes/auth.route"
 
 dotenv.config()
 
@@ -10,7 +11,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
+// api routes
 app.use('/api/notes', router)
+
+// auth routes
+app.use('/api/auth', authRouter)
 
 app.get('/', (req, res) => {
     res.status(200).json({
