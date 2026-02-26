@@ -1,11 +1,12 @@
 import NoteModel from "../models/Note.model";
 import { Dev_User_id } from "../models/user.model";
 import formattedDate from "../utils/formattedDate";
+import { Request, Response } from "express";
 
 // get all notes
-export const getAllNotes = async (req: any, res: any) => {
+export const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const notes = await NoteModel.find().sort({ createdAt: -1 });
+    const notes = await NoteModel.find().sort({ updatedAt: -1 });
     res.status(200).json({
       success: true,
       message: "Notes fetched successfully",
@@ -21,7 +22,7 @@ export const getAllNotes = async (req: any, res: any) => {
 };
 
 // get a single note by id
-export const getNoteById = async (req: any, res: any) => {
+export const getNoteById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const note = await NoteModel.findById(id);
@@ -45,7 +46,7 @@ export const getNoteById = async (req: any, res: any) => {
 };
 
 // create a new note
-export const createNote = async (req: any, res: any) => {
+export const createNote = async (req: Request, res: Response) => {
   try {
     const { title, details } = req.body;
     const newNote = await NoteModel.create({
@@ -68,7 +69,7 @@ export const createNote = async (req: any, res: any) => {
 };
 
 // delete a note by id
-export const deleteNote = async (req: any, res: any) => {
+export const deleteNote = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const deletedNote = await NoteModel.findByIdAndDelete(id);
@@ -92,7 +93,7 @@ export const deleteNote = async (req: any, res: any) => {
 };
 
 // update a note by id
-export const updateNote = async (req: any, res: any) => {
+export const updateNote = async (req: Request, res: Response) => { 
   try {
     const { id } = req.params;
     const { title, details } = req.body;
@@ -121,7 +122,7 @@ export const updateNote = async (req: any, res: any) => {
 };
 
 // delete all notes
-export const deleteAllNotes = async (req: any, res: any) => {
+export const deleteAllNotes = async (req: Request, res: Response) => {
   try {
     await NoteModel.deleteMany({});
     res.status(200).json({
