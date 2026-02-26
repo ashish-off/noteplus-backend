@@ -1,4 +1,8 @@
 import jwt from "jsonwebtoken";
+
 export const generateToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: "1d" });
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET is not defined");
+
+  return jwt.sign({ id }, secret, { expiresIn: "1d" });
 };
