@@ -1,12 +1,15 @@
 import NoteModel from "../models/Note.model";
-import { Dev_User_id } from "../models/user.model";
 import formattedDate from "../utils/formattedDate";
-import { Request, Response } from "express";
+import { Response } from "express";
 
 // get all notes
-export const getAllNotes = async (req: Request, res: Response) => {
+export const getAllNotes = async (req: any, res: Response) => {
   try {
-    const notes = await NoteModel.find().sort({ updatedAt: -1 });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const notes = await NoteModel.find({ userId }).sort({ updatedAt: -1 });
     res.status(200).json({
       success: true,
       message: "Notes fetched successfully",
@@ -22,10 +25,14 @@ export const getAllNotes = async (req: Request, res: Response) => {
 };
 
 // get a single note by id
-export const getNoteById = async (req: Request, res: Response) => {
+export const getNoteById = async (req: any, res: Response) => {
   try {
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
     const { id } = req.params;
-    const note = await NoteModel.findById(id);
+    const note = await NoteModel.findOne({ _id: id, userId });
     if (!note) {
       return res
         .status(404)
@@ -46,13 +53,17 @@ export const getNoteById = async (req: Request, res: Response) => {
 };
 
 // create a new note
-export const createNote = async (req: Request, res: Response) => {
+export const createNote = async (req: any, res: Response) => {
   try {
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
     const { title, details } = req.body;
     const newNote = await NoteModel.create({
       title,
       details,
-      userId : Dev_User_id,
+      userId,
     });
     res.status(201).json({
       success: true,
@@ -69,10 +80,14 @@ export const createNote = async (req: Request, res: Response) => {
 };
 
 // delete a note by id
-export const deleteNote = async (req: Request, res: Response) => {
+export const deleteNote = async (req: any, res: Response) => {
   try {
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
     const { id } = req.params;
-    const deletedNote = await NoteModel.findByIdAndDelete(id);
+    const deletedNote = await NoteModel.findOneAndDelete({ _id: id, userId });
     if (!deletedNote) {
       return res
         .status(404)
@@ -93,12 +108,16 @@ export const deleteNote = async (req: Request, res: Response) => {
 };
 
 // update a note by id
-export const updateNote = async (req: Request, res: Response) => { 
+export const updateNote = async (req: any, res: Response) => {
   try {
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
     const { id } = req.params;
     const { title, details } = req.body;
-    const updatedNote = await NoteModel.findByIdAndUpdate(
-      id,
+    const updatedNote = await NoteModel.findOneAndUpdate(
+      { _id: id, userId },
       { title, details, dateLabel: formattedDate() },
       { new: true },
     );
@@ -122,9 +141,13 @@ export const updateNote = async (req: Request, res: Response) => {
 };
 
 // delete all notes
-export const deleteAllNotes = async (req: Request, res: Response) => {
+export const deleteAllNotes = async (req: any, res: Response) => {
   try {
-    await NoteModel.deleteMany({});
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    await NoteModel.deleteMany({ userId });
     res.status(200).json({
       success: true,
       message: "All notes deleted successfully",
