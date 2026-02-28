@@ -14,12 +14,7 @@ export const authMiddleware = async (
       return res.status(500).json({ message: "Internal server error" });
     }
 
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
+    const token = req.cookies.token;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }

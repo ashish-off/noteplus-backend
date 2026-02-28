@@ -16,7 +16,13 @@ export const registerUser = async (req: Request, res: Response) => {
     const user = await User.create({ name, email, password: hash });
     const token = generateToken(user._id.toString());
     const { password: _, ...userWithoutPassword } = user.toObject();
-    res.status(201).json({ user: userWithoutPassword, token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(201).json({ user: userWithoutPassword });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -37,7 +43,28 @@ export const loginUser = async (req: Request, res: Response) => {
     }
     const token = generateToken(user._id.toString());
     const { password: _, ...userWithoutPassword } = user.toObject();
-    res.status(200).json({ user: userWithoutPassword, token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ user: userWithoutPassword });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// logout
+export const logoutUser = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
