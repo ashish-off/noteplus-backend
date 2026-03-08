@@ -24,7 +24,11 @@ export const authMiddleware = async (
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    req.user = { id: decodedToken.id };
+    req.user = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    };
     next();
   } catch (error) {
     console.error(

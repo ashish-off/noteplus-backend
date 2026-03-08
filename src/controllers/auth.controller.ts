@@ -70,3 +70,10 @@ export const logoutUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// endpoint for proteced route to check if user is logged in (token verify via middleware)
+export const validMe = async (req : any, res: Response) => {
+  const user = req.user;
+  if(!user) return res.status(401).json({ message: "Unauthorized" });
+  res.status(200).json({ user });
+}
