@@ -37,6 +37,12 @@ app.get("/", (req, res) => {
       delete_note: "/api/notes/:id",
       delete_all_notes: "/api/notes/delete-all",
     },
+    auth_endpoints: {
+      register: "/api/auth/register",
+      login: "/api/auth/login",
+      logout: "/api/auth/logout",
+      get_me: "/api/auth/me",
+    },
   });
 });
 
