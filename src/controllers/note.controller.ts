@@ -1,5 +1,4 @@
 import NoteModel from "../models/Note.model";
-import formattedDate from "../utils/formattedDate";
 import { Response } from "express";
 
 // get all notes
@@ -118,7 +117,7 @@ export const updateNote = async (req: any, res: Response) => {
     const { title, details } = req.body;
     const updatedNote = await NoteModel.findOneAndUpdate(
       { _id: id, userId },
-      { title, details, dateLabel: formattedDate() },
+      { title, details },
       { new: true },
     );
     if (!updatedNote) {
